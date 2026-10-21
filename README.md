@@ -40,9 +40,6 @@
 
 ## 插件推荐 / Recommended Plugin
 
-![SwiftSwitch 演示](swiftswitch-demo.gif)
-
-- [SwiftSwitch](https://community.obsidian.md/plugins/swift-snippets) — 在标签页上快速切换主题与配色方案
 
 > ![SwiftSwitch demo](swiftswitch-demo.gif)
 >
