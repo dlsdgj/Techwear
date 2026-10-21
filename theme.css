@@ -190,6 +190,16 @@ body.wtcc-bot .workspace-split.mod-root .workspace-tab-header.is-active .workspa
 .markdown-source-view.mod-cm6 .cm-callout .callout{margin-bottom:.9em}
 .callout-title{font-family:var(--wtcc-mono);font-size:.8em;letter-spacing:.14em;text-transform:uppercase}
 
+/* 文字颜色兜底（移动端）：编辑区正文 / 标题始终使用主文字色，且不透明 */
+.markdown-source-view.mod-cm6 .cm-content,
+.markdown-source-view.mod-cm6 .cm-line,
+.markdown-rendered{color:var(--text-normal);opacity:1}
+.markdown-source-view.mod-cm6 .cm-header,
+.markdown-source-view.mod-cm6 .HyperMD-header{color:var(--text-normal)}
+.markdown-source-view.mod-cm6 .cm-header-4,.markdown-source-view.mod-cm6 .cm-header-5{color:var(--text-muted)}
+.markdown-source-view.mod-cm6 .cm-header-6{color:var(--text-faint)}
+body:not(.wtcc-floor) .workspace-leaf-content[data-type="markdown"] .view-content{-webkit-mask-image:none;mask-image:none}
+
 /* 侧栏左边缘：纵向粉色虚线（功能区 | 侧面板 分隔，三方案通用） */
 .workspace-split.mod-left-split{position:relative}
 .workspace-split.mod-left-split::before{
