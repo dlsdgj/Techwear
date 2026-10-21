@@ -1,8 +1,5 @@
 # Techwear
 
-> WTCC 2026 灵感主题 —— 白底 / 粉紫渐变 / 机能装备 / 人机共生。
-
-> An Obsidian theme inspired by the WTCC 2026 poster — white base, pink-purple gradient, techwear, human-machine symbiosis.
 
 ## 截图 / Screenshots
 
