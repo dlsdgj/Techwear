@@ -1,46 +1,21 @@
 /* ==========================================================================
-   WTCC 2026 — Obsidian theme
-   灵感：WTCC 2026 海报（白底 / 粉紫渐变 / Techwear / 人机共生）
-   三种方案合一，通过 body 类切换（默认 = B1 机能装备）：
-     .wtcc-gear   B1 机能装备  织带 / 吊牌 / 半透明镭射外套
-     .wtcc-floor  B2 倒影地面  内容溶进粉紫地面 / 阵容胶囊
-     .wtcc-bot    B3 机器人伙伴 面罩 LED 标签 / 机器人脸图标
-   浅色 / 深色 均支持。
+   Techwear — Obsidian theme
+   灵感：WTCC 2026 海报（白底 / 粉紫点缀 / Techwear 机能风）
+   织带 · 吊牌 · 半透明镭射外套 · 方格底纹；浅色 / 深色。
    ========================================================================== */
-
-/* @settings
-name: WTCC 2026
-id: wtcc
-settings:
-  -
-    id: wtcc-scheme
-    title: 方案 / Scheme
-    description: B1 机能装备 / B2 倒影地面 / B3 机器人伙伴
-    type: class-select
-    allowEmpty: false
-    default: wtcc-gear
-    options:
-      -
-        label: B1 机能装备
-        value: wtcc-gear
-      -
-        label: B2 倒影地面
-        value: wtcc-floor
-      -
-        label: B3 机器人伙伴
-        value: wtcc-bot
-*/
 
 /* ---------- 调色板（侧栏 / 标签页 / 编辑器同一底色） ---------- */
 .theme-light{
   --a:#e86bd0; --b:#a56ff0; --a-text:#b0359a;
   --ink:#1a1820; --onink:#ffffff; --line:#dedbe6; --mute:#86808f;
+  --grid:#dedbe6;
   --panel:#ffffff;
   --glass:rgba(255,255,255,.62);
   --cw:#ffffff;
   --cshadow:0 10px 28px rgba(165,111,240,.25),0 2px 6px rgba(26,24,32,.08);
   --code-bg:#16131d; --code-fg:#e8e4f5;
-  --floor-1:#ff5fcf; --floor-2:#a56ff0; --floor-3:rgba(197,139,255,.45);
+  --wtcc-text:#1a1820; --wtcc-muted:#6f6879; --wtcc-faint:#a49dad;
+  --refl1:rgba(165,111,240,.4);
 
   --background-primary:#f4f3f7;
   --background-primary-alt:#eceaf2;
@@ -51,16 +26,20 @@ settings:
   --text-normal:#1a1820;
   --text-muted:#6f6879;
   --text-faint:#a49dad;
+
+  --buckle:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 14'><rect x='1' y='1' width='30' height='12' rx='3' fill='none' stroke='%23e86bd0' stroke-width='2'/><line x1='5' y1='7' x2='27' y2='7' stroke='%23e86bd0' stroke-width='3'/></svg>");
 }
 .theme-dark{
   --a:#ff7be0; --b:#a58bff; --a-text:#ff9be8;
   --ink:#eee8fa; --onink:#14101c; --line:#32284a; --mute:#9a8fb3;
+  --grid:rgba(255,255,255,.045);
   --panel:#1b1626;
   --glass:rgba(34,26,52,.66);
   --cw:rgba(255,255,255,.4);
   --cshadow:0 10px 28px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3);
   --code-bg:#0b0810; --code-fg:#e8e4f5;
-  --floor-1:#b0209a; --floor-2:#5b3bd0; --floor-3:rgba(110,70,200,.5);
+  --wtcc-text:#eee8fa; --wtcc-muted:#9a8fb3; --wtcc-faint:#8a7fa6;
+  --refl1:rgba(255,255,255,.95);
 
   --background-primary:#14101c;
   --background-primary-alt:#1b1626;
@@ -71,6 +50,8 @@ settings:
   --text-normal:#eee8fa;
   --text-muted:#9a8fb3;
   --text-faint:#6f6489;
+
+  --buckle:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 14'><rect x='1' y='1' width='30' height='12' rx='3' fill='none' stroke='%23ff7be0' stroke-width='2'/><line x1='5' y1='7' x2='27' y2='7' stroke='%23ff7be0' stroke-width='3'/></svg>");
 }
 
 body{
@@ -82,11 +63,10 @@ body{
   --link-color-hover:var(--b);
   --link-external-color:var(--a-text);
   --text-highlight-bg:color-mix(in srgb,var(--a) 26%,transparent);
-  --text-selection:color-mix(in srgb,var(--b) 28%,transparent);
+  --text-selection:color-mix(in srgb,var(--a) 30%,transparent);
   --wtcc-mono:"JetBrains Mono",Consolas,"Microsoft YaHei UI","Microsoft YaHei","PingFang SC","Noto Sans SC","Source Han Sans SC",sans-serif;
   --font-monospace-theme:"JetBrains Mono",Consolas,"Microsoft YaHei UI","PingFang SC","Noto Sans SC",monospace;
 
-  /* 标题尺寸（各方案在下方单独设计样式） */
   --h1-size:2em;   --h1-weight:900; --h1-color:var(--text-normal); --h1-line-height:1.2;
   --h2-size:1.4em; --h2-weight:800; --h2-color:var(--text-normal);
   --h3-size:1.2em; --h3-weight:700; --h3-color:var(--text-normal);
@@ -102,23 +82,26 @@ body{
   --blockquote-border-thickness:4px;
   --blockquote-background-color:var(--background-primary-alt);
   --list-marker-color:var(--a);
-  --checkbox-radius:3px;
-  --checkbox-color:var(--a);
-  --checkbox-marker-color:#fff;
   --callout-blend-mode:normal;
-  --callout-radius:6px;
+  --callout-radius:12px;
 
+  /* 复选框：方形 + 粉色扣条 */
+  --checkbox-radius:2px;
+  --checkbox-color:var(--ink);
+  --checkbox-marker-color:var(--a);
+
+  /* 标签：吊牌 */
   --tag-size:.78em;
   --tag-color:var(--ink);
   --tag-color-hover:var(--ink);
-  --tag-background:transparent;
+  --tag-background:var(--background-primary);
   --tag-background-hover:color-mix(in srgb,var(--a) 14%,transparent);
   --tag-border-color:var(--ink);
   --tag-border-color-hover:var(--a);
-  --tag-border-width:1px;
+  --tag-border-width:1.5px;
   --tag-padding-x:.75em;
   --tag-padding-y:.22em;
-  --tag-radius:4px;
+  --tag-radius:5px;
 
   /* 侧栏 / 标签页 / 功能区 / 标题栏：与编辑器同色；去掉所有分割线 */
   --titlebar-background:var(--background-primary);
@@ -137,6 +120,15 @@ body{
   --divider-width:0px;
   --divider-color-hover:var(--a);
   --divider-width-hover:2px;
+
+  /* 文件列表：显式指定颜色，避免被其它样式压淡 */
+  --nav-item-color:var(--text-muted);
+  --nav-item-color-hover:var(--text-normal);
+  --nav-item-color-active:var(--onink);
+  --nav-item-color-selected:var(--onink);
+  --nav-item-background-hover:var(--background-modifier-hover);
+  --nav-item-background-active:var(--ink);
+  --nav-item-background-selected:var(--ink);
 }
 .workspace-split.mod-left-split,
 .workspace-split.mod-right-split,
@@ -145,7 +137,7 @@ body{
 .workspace-tabs{border-left:0;border-right:0}
 
 /* ---------- 通用 ---------- */
-.markdown-rendered h1,.HyperMD-header-1{letter-spacing:.05em}
+.markdown-rendered h1,.HyperMD-header-1{letter-spacing:.07em}
 .markdown-rendered h2,.HyperMD-header-2{letter-spacing:.04em}
 mark,.cm-highlight{border-radius:3px;padding:0 .15em}
 a.tag,.cm-hashtag{font-family:var(--wtcc-mono);letter-spacing:.04em}
@@ -153,54 +145,72 @@ a.tag,.cm-hashtag{font-family:var(--wtcc-mono);letter-spacing:.04em}
 .markdown-rendered pre,.markdown-source-view.mod-cm6 .HyperMD-codeblock{border-left:3px solid var(--a)}
 .markdown-rendered pre{border-radius:4px}
 th{font-family:var(--wtcc-mono);font-size:.78em;letter-spacing:.1em;text-transform:uppercase}
-/* 标签页：去掉标签前的分隔线 / 曲线角，粗体，活动标签顶部横线（各方案匹配） */
+.status-bar{font-family:var(--wtcc-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+.workspace-ribbon.side-dock-ribbon .clickable-icon.is-active{color:var(--a)}
+
+/* 标签页：无分隔线 / 曲线角，粗体，活动标签顶部粉色横线（宽度 = 整个标签） */
 .workspace-tab-header{position:relative}
 .workspace-tab-header::before,.workspace-tab-header::after{content:none}
 .workspace-tab-header-inner-title{
   font-family:var(--font-interface);font-size:var(--nav-item-size,var(--font-ui-small));
   letter-spacing:0;font-weight:700;font-style:normal;text-transform:none;
 }
-/* 顶部横线画在标签内容块上，宽度 = 整个标签（含关闭按钮） */
 .workspace-split.mod-root .workspace-tab-header.is-active .workspace-tab-header-inner{
   border-radius:0;
   background-image:linear-gradient(var(--a),var(--a));
   background-repeat:no-repeat;background-position:top left;background-size:100% 3px;
 }
-body.wtcc-floor .workspace-split.mod-root .workspace-tab-header.is-active .workspace-tab-header-inner{
-  background-image:linear-gradient(90deg,var(--a),var(--b));
-}
-body.wtcc-bot .workspace-split.mod-root .workspace-tab-header.is-active .workspace-tab-header-inner{
-  background-image:repeating-linear-gradient(90deg,var(--b) 0 5px,transparent 5px 8px);
-  background-size:100% 2px;
-}
-.nav-file-title,.nav-folder-title,.tree-item-self{border-radius:3px}
-.nav-file-title.is-active,.tree-item-self.is-active{font-weight:700}
-.status-bar{font-family:var(--wtcc-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
-.workspace-ribbon.side-dock-ribbon .clickable-icon.is-active{color:var(--a)}
 
 /* 标题通用：h4–h6 等宽小字 */
 .markdown-rendered h4,.markdown-rendered h5,.markdown-rendered h6,
 .HyperMD-header-4,.HyperMD-header-5,.HyperMD-header-6{font-family:var(--wtcc-mono);letter-spacing:.12em;text-transform:uppercase}
 
-/* Callout：白色边框 + 阴影（三方案通用，各方案再叠加自己的质感） */
-.callout{border:1.5px solid var(--cw);box-shadow:var(--cshadow)}
+/* ---------- 文字颜色兜底 ----------
+   正文用写死的颜色 + !important；选择器里的 :not(#w1):not(#w2) 抬高优先级，
+   盖过其它插件 / snippet 里同样带 !important 的规则。
+   正文是直接挂在 .cm-line 下的文本，所以必须落在 .cm-line 本身上。 */
+html body .markdown-source-view.mod-cm6 .cm-scroller .cm-content:not(#w1):not(#w2),
+html body .markdown-source-view.mod-cm6 .cm-scroller .cm-content .cm-line:not(.HyperMD-codeblock):not(#w1):not(#w2),
+html body .markdown-source-view.mod-cm6 .cm-scroller .cm-content .cm-line:not(.HyperMD-codeblock) > span:not(#w1):not(#w2):not([class*="cm-formatting"]):not([class*="cm-header-4"]):not([class*="cm-header-5"]):not([class*="cm-header-6"]):not([class*="cm-hashtag"]):not([class*="cm-link"]):not([class*="cm-url"]):not([class*="cm-highlight"]):not([class*="cm-inline-code"]):not([class*="cm-strikethrough"]),
+html body .markdown-preview-view:not(#w1):not(#w2),
+html body .markdown-preview-view p:not(#w1):not(#w2),
+html body .markdown-preview-view li:not(#w1):not(#w2),
+html body .markdown-preview-view td:not(#w1):not(#w2),
+html body .markdown-preview-view th:not(#w1):not(#w2){color:var(--wtcc-text) !important;opacity:1 !important}
+/* 代码块（实时预览）：底色是深色，文字必须用浅色，不能吃上面的正文色 */
+html body .markdown-source-view.mod-cm6 .cm-content .cm-line.HyperMD-codeblock:not(#w1):not(#w2){color:var(--code-fg) !important;opacity:1 !important}
+html body .markdown-source-view.mod-cm6 .cm-content .cm-header-4:not(#w1):not(#w2),
+html body .markdown-source-view.mod-cm6 .cm-content .cm-header-5:not(#w1):not(#w2){color:var(--wtcc-muted) !important}
+html body .markdown-source-view.mod-cm6 .cm-content .cm-header-6:not(#w1):not(#w2),
+html body .markdown-source-view.mod-cm6 .cm-content .cm-formatting:not(#w1):not(#w2){color:var(--wtcc-faint) !important}
+
+/* ---------- Callout：半透明镭射外套（白边 + 阴影） ---------- */
+.callout{
+  border:1.5px solid var(--cw);border-radius:12px;box-shadow:var(--cshadow);backdrop-filter:blur(8px);
+  background:linear-gradient(115deg,rgba(255,255,255,.75),rgba(255,196,238,.42) 30%,rgba(196,176,255,.42) 60%,rgba(255,255,255,.7)),var(--glass);
+}
+.theme-dark .callout{
+  background:linear-gradient(115deg,rgba(255,255,255,.08),rgba(255,123,224,.16) 30%,rgba(140,120,255,.18) 60%,rgba(255,255,255,.06)),var(--glass);
+}
+.callout-title{font-family:var(--wtcc-mono);font-size:.8em;letter-spacing:.14em;text-transform:uppercase}
 /* 实时预览：callout 外层容器不裁剪阴影 */
 .markdown-source-view.mod-cm6 .cm-embed-block.cm-callout,
 .markdown-source-view.mod-cm6 .cm-callout{overflow:visible;contain:none}
 .markdown-source-view.mod-cm6 .cm-callout .callout{margin-bottom:.9em}
-.callout-title{font-family:var(--wtcc-mono);font-size:.8em;letter-spacing:.14em;text-transform:uppercase}
 
-/* 文字颜色兜底（移动端）：编辑区正文 / 标题始终使用主文字色，且不透明 */
-.markdown-source-view.mod-cm6 .cm-content,
-.markdown-source-view.mod-cm6 .cm-line,
-.markdown-rendered{color:var(--text-normal);opacity:1}
-.markdown-source-view.mod-cm6 .cm-header,
-.markdown-source-view.mod-cm6 .HyperMD-header{color:var(--text-normal)}
-.markdown-source-view.mod-cm6 .cm-header-4,.markdown-source-view.mod-cm6 .cm-header-5{color:var(--text-muted)}
-.markdown-source-view.mod-cm6 .cm-header-6{color:var(--text-faint)}
-body:not(.wtcc-floor) .workspace-leaf-content[data-type="markdown"] .view-content{-webkit-mask-image:none;mask-image:none}
+/* ---------- 底纹：方格，画在滚动容器上并随内容滚动 ---------- */
+.view-content{background-image:none}
+.markdown-source-view.mod-cm6 .cm-scroller,
+.markdown-preview-view{
+  background-color:transparent;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;
+  background-position:-1px -1px;
+  background-attachment:local;
+}
+.markdown-source-view{background:transparent}
 
-/* 侧栏左边缘：纵向粉色虚线（功能区 | 侧面板 分隔，三方案通用） */
+/* ---------- 侧栏左边缘：纵向粉色虚线 ---------- */
 .workspace-split.mod-left-split{position:relative}
 .workspace-split.mod-left-split::before{
   content:"";position:absolute;top:0;bottom:0;left:0;width:5px;z-index:3;pointer-events:none;
@@ -208,221 +218,242 @@ body:not(.wtcc-floor) .workspace-leaf-content[data-type="markdown"] .view-conten
 }
 .workspace-split.mod-left-split.is-sidedock-collapsed::before{display:none}
 
-/* ==========================================================================
-   B1 · 机能装备（默认）
-   ========================================================================== */
-body:not(.wtcc-floor):not(.wtcc-bot) .view-content{
-  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-  background-size:28px 28px;background-position:-1px -1px;
-}
-.theme-dark:not(.wtcc-floor):not(.wtcc-bot) .view-content{
-  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
-}
-body:not(.wtcc-floor):not(.wtcc-bot) .markdown-source-view,
-body:not(.wtcc-floor):not(.wtcc-bot) .markdown-preview-view{background:transparent}
-
-/* 标题：墨色织带底线 + 粉色扣块 / 双斜线前缀 / 墨色竖条 / 等宽小标 */
-body:not(.wtcc-floor):not(.wtcc-bot) .markdown-rendered h1,
-body:not(.wtcc-floor):not(.wtcc-bot) .HyperMD-header-1{
-  text-transform:uppercase;letter-spacing:.07em;padding-bottom:.22em;
+/* ---------- 标题：墨色织带底线 + 粉色扣块 / 双斜线前缀 / 墨色竖条 / 方块 ---------- */
+.markdown-rendered h1,
+.HyperMD-header-1{
+  text-transform:uppercase;padding-bottom:.22em;
   background:
     linear-gradient(var(--a),var(--a)) left bottom/56px 4px no-repeat,
     linear-gradient(var(--ink),var(--ink)) left bottom/100% 4px no-repeat;
 }
-body:not(.wtcc-floor):not(.wtcc-bot) .markdown-rendered h2,
-body:not(.wtcc-floor):not(.wtcc-bot) .HyperMD-header-2{padding-bottom:.2em;border-bottom:1px solid var(--line)}
-body:not(.wtcc-floor):not(.wtcc-bot) .markdown-rendered h2::before,
-body:not(.wtcc-floor):not(.wtcc-bot) .HyperMD-header-2::before{
+.markdown-rendered h2,
+.HyperMD-header-2{padding-bottom:.2em;border-bottom:1px solid var(--line)}
+.markdown-rendered h2::before,
+.HyperMD-header-2::before{
   content:"//";margin-right:.55em;color:var(--a);font:700 .7em var(--wtcc-mono);letter-spacing:0;vertical-align:.12em;
 }
-body:not(.wtcc-floor):not(.wtcc-bot) .markdown-rendered h3,
-body:not(.wtcc-floor):not(.wtcc-bot) .HyperMD-header-3{border-left:4px solid var(--ink);padding-left:.6em}
-body:not(.wtcc-floor):not(.wtcc-bot) .markdown-rendered h4::before,
-body:not(.wtcc-floor):not(.wtcc-bot) .HyperMD-header-4::before{content:"";display:inline-block;width:.5em;height:.5em;margin-right:.6em;background:var(--a);vertical-align:.05em}
+.markdown-rendered h3,
+.HyperMD-header-3{border-left:4px solid var(--ink);padding-left:.6em}
+.markdown-rendered h4::before,
+.HyperMD-header-4::before{content:"";display:inline-block;width:.5em;height:.5em;margin-right:.6em;background:var(--a);vertical-align:.05em}
 
-/* 侧栏：编号 + 墨色激活条 */
-body:not(.wtcc-floor):not(.wtcc-bot) .nav-folder-children{counter-reset:wtcc}
-body:not(.wtcc-floor):not(.wtcc-bot) .nav-file{counter-increment:wtcc}
-body:not(.wtcc-floor):not(.wtcc-bot) .nav-file-title{display:flex;align-items:center;border-left:3px solid transparent}
-body:not(.wtcc-floor):not(.wtcc-bot) .nav-file-title::after{
+/* ---------- 侧栏文件列表：编号 + 墨色激活条 ---------- */
+.nav-file-title,.nav-folder-title,.tree-item-self{border-radius:3px}
+.nav-folder-children{counter-reset:wtcc}
+.nav-file{counter-increment:wtcc}
+.nav-file-title{display:flex;align-items:center;border-left:3px solid transparent}
+.nav-file-title::after{
   content:counter(wtcc,decimal-leading-zero);margin-left:auto;align-self:center;flex:none;
   font-family:"JetBrains Mono",Consolas,"Sarasa Mono SC",monospace;font-size:9px;font-weight:400;font-style:normal;
   letter-spacing:0;line-height:1;text-transform:none;color:var(--mute);
 }
-body:not(.wtcc-floor):not(.wtcc-bot) .nav-file-title.is-active,
-body:not(.wtcc-floor):not(.wtcc-bot) .tree-item-self.is-active{background:var(--ink);color:var(--onink);border-left-color:var(--a)}
-body:not(.wtcc-floor):not(.wtcc-bot) .nav-file-title.is-active::after{color:var(--a)}
+html body .nav-file-title:not(.is-active) .nav-file-title-content,
+html body .nav-folder-title .nav-folder-title-content{color:var(--text-muted);opacity:1}
+html body .nav-file-title:not(.is-active):hover .nav-file-title-content{color:var(--text-normal)}
+html body .nav-file-title.is-active,
+html body .tree-item-self.is-active{
+  background:var(--ink) !important;color:var(--onink) !important;border-left-color:var(--a);
+  font-weight:700;outline:0;
+  box-shadow:0 0 0 1px var(--a),0 0 18px color-mix(in srgb,var(--a) 55%,transparent);
+}
+html body .nav-file-title.is-active .nav-file-title-content,
+html body .nav-file-title.is-active .nav-file-title-content *,
+html body .tree-item-self.is-active .tree-item-inner{color:var(--onink) !important;opacity:1}
+.nav-file-title.is-active::after{color:var(--a)}
 
-/* 标签：吊牌（带孔） */
-body:not(.wtcc-floor):not(.wtcc-bot){--tag-border-width:1.5px;--tag-radius:5px;--tag-background:var(--background-primary)}
-body:not(.wtcc-floor):not(.wtcc-bot) a.tag{position:relative;padding-left:1.6em}
-body:not(.wtcc-floor):not(.wtcc-bot) a.tag::before{
+/* ---------- 标签：吊牌（带孔） ---------- */
+a.tag{position:relative;padding-left:1.6em}
+a.tag::before{
   content:"";position:absolute;left:.55em;top:50%;width:6px;height:6px;margin-top:-3px;
   border-radius:50%;border:1.5px solid var(--a);
 }
 
-/* 分隔线：织带 + 扣具 */
-body:not(.wtcc-floor):not(.wtcc-bot) hr{
+/* ---------- 分隔线：织带 + 扣具 ---------- */
+hr{
   border:0;height:14px;margin:1.6em 0;
   background:
     var(--buckle) right center/32px 14px no-repeat,
     repeating-linear-gradient(90deg,var(--ink) 0 10px,transparent 10px 14px) left center/calc(100% - 44px) 8px no-repeat;
 }
-.theme-light{--buckle:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 14'><rect x='1' y='1' width='30' height='12' rx='3' fill='none' stroke='%23e86bd0' stroke-width='2'/><line x1='5' y1='7' x2='27' y2='7' stroke='%23e86bd0' stroke-width='3'/></svg>")}
-.theme-dark{--buckle:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 14'><rect x='1' y='1' width='30' height='12' rx='3' fill='none' stroke='%23ff7be0' stroke-width='2'/><line x1='5' y1='7' x2='27' y2='7' stroke='%23ff7be0' stroke-width='3'/></svg>")}
-
-/* Callout：半透明镭射外套（白边 + 阴影沿用通用规则） */
-body:not(.wtcc-floor):not(.wtcc-bot) .callout{
-  border-radius:12px;backdrop-filter:blur(8px);
-  background:linear-gradient(115deg,rgba(255,255,255,.75),rgba(255,196,238,.42) 30%,rgba(196,176,255,.42) 60%,rgba(255,255,255,.7)),var(--glass);
-}
-.theme-dark:not(.wtcc-floor):not(.wtcc-bot) .callout{
-  background:linear-gradient(115deg,rgba(255,255,255,.08),rgba(255,123,224,.16) 30%,rgba(140,120,255,.18) 60%,rgba(255,255,255,.06)),var(--glass);
-}
-
-/* 复选框：方形 + 粉色扣条 */
-body:not(.wtcc-floor):not(.wtcc-bot){--checkbox-radius:2px;--checkbox-color:var(--ink);--checkbox-marker-color:var(--a)}
 
 /* ==========================================================================
-   B2 · 倒影地面
+   装饰
+   1 洗标 Properties   2 缝线边   3 Callout 分面料   4 织带滚动条
+   5 反光条            6 缝线链接   7 斜纹选区 + 粗块光标
    ========================================================================== */
-body.wtcc-floor{--tag-radius:999px;--checkbox-radius:50%;--blockquote-border-thickness:0px;--h1-size:2.2em}
-body.wtcc-floor .workspace-split.mod-root{
+
+/* ---------- 1 洗标 Properties ---------- */
+body .metadata-container{
   position:relative;
-  background:
-    radial-gradient(ellipse 85% 100% at 15% 118%,var(--floor-1) 0,transparent 68%) bottom/100% 46% no-repeat,
-    radial-gradient(ellipse 75% 95% at 95% 115%,var(--floor-2) 0,transparent 70%) bottom/100% 46% no-repeat,
-    linear-gradient(to top,var(--floor-3),transparent) bottom/100% 46% no-repeat,
-    var(--background-primary);
+  padding:38px 24px 14px 26px;
+  border:0;
+  background:linear-gradient(225deg,transparent 16px,var(--panel) 0);   /* 右上角切角 */
+  filter:drop-shadow(0 6px 14px rgba(165,111,240,.22)) drop-shadow(0 1px 2px rgba(26,24,32,.10));
 }
-body.wtcc-floor .workspace-split.mod-root .workspace-tabs,
-body.wtcc-floor .workspace-split.mod-root .workspace-leaf,
-body.wtcc-floor .workspace-split.mod-root .workspace-leaf-content,
-body.wtcc-floor .workspace-split.mod-root .view-content,
-body.wtcc-floor .workspace-split.mod-root .markdown-source-view,
-body.wtcc-floor .workspace-split.mod-root .markdown-preview-view,
-body.wtcc-floor .workspace-split.mod-root .cm-editor,
-body.wtcc-floor .workspace-split.mod-root .cm-scroller{background:transparent}
-/* 内容在底部溶进地面 */
-body.wtcc-floor .workspace-leaf-content[data-type="markdown"] .view-content{
-  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 110px),transparent);
-  mask-image:linear-gradient(to bottom,#000 calc(100% - 110px),transparent);
+/* 内缩一圈缝线 */
+body .metadata-container::before{
+  content:"";position:absolute;inset:7px;pointer-events:none;
+  border:1.5px dashed color-mix(in srgb,var(--ink) 38%,transparent);
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%);
 }
-/* 阵容胶囊 + 倒影 */
-body.wtcc-floor .workspace-split.mod-root::after{
-  content:"";position:absolute;right:28px;bottom:34px;width:140px;height:100px;pointer-events:none;z-index:5;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 100'><defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='white' stop-opacity='.55'/><stop offset='1' stop-color='white' stop-opacity='0'/></linearGradient></defs><g fill='white' stroke='%23e7d6ff' stroke-width='1.5'><rect x='1' y='36' width='13' height='16' rx='6.5'/><rect x='21' y='28' width='13' height='24' rx='6.5'/><rect x='41' y='16' width='13' height='36' rx='6.5'/><rect x='61' y='8' width='13' height='44' rx='6.5' fill='%23ffd0f3'/><rect x='81' y='18' width='13' height='34' rx='6.5'/><rect x='101' y='26' width='13' height='26' rx='6.5'/><rect x='121' y='38' width='13' height='14' rx='6.5'/></g><g fill='url(%23g)'><rect x='1' y='54' width='13' height='16' rx='6.5'/><rect x='21' y='54' width='13' height='24' rx='6.5'/><rect x='41' y='54' width='13' height='36' rx='6.5'/><rect x='61' y='54' width='13' height='44' rx='6.5'/><rect x='81' y='54' width='13' height='34' rx='6.5'/><rect x='101' y='54' width='13' height='26' rx='6.5'/><rect x='121' y='54' width='13' height='14' rx='6.5'/></g></svg>") center/contain no-repeat;
+/* 左上角穿孔 */
+body .metadata-container::after{
+  content:"";position:absolute;left:16px;top:14px;width:9px;height:9px;border-radius:50%;pointer-events:none;
+  background:var(--background-primary);box-shadow:inset 0 0 0 1.5px var(--ink);
 }
-/* 侧栏：渐变胶囊激活 */
-body.wtcc-floor .nav-file-title.is-active,
-body.wtcc-floor .tree-item-self.is-active{background:linear-gradient(90deg,var(--a),var(--b));color:#fff;border-radius:999px}
-
-/* 标题：渐变下划线 / 阵容胶囊前缀 / 渐变圆点 / 短横线 */
-body.wtcc-floor .markdown-rendered h1,
-body.wtcc-floor .HyperMD-header-1{
-  letter-spacing:.06em;padding-bottom:.2em;
-  background:linear-gradient(90deg,var(--a),var(--b),transparent) left bottom/62% 3px no-repeat;
+body .metadata-properties-heading{position:absolute;left:36px;top:10px;margin:0;padding:0;width:auto}
+body .metadata-properties-title{
+  display:flex;align-items:center;gap:10px;
+  font:700 10px var(--wtcc-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);
 }
-body.wtcc-floor .markdown-rendered h2,
-body.wtcc-floor .HyperMD-header-2{
-  padding-bottom:.25em;
-  background:linear-gradient(90deg,var(--line),transparent) bottom/100% 1px no-repeat;
-}
-body.wtcc-floor .markdown-rendered h2::before,
-body.wtcc-floor .HyperMD-header-2::before{
-  content:"";display:inline-block;width:8px;height:.95em;margin-right:.5em;border-radius:6px;vertical-align:-.12em;
-  background:linear-gradient(180deg,var(--a),var(--b));box-shadow:0 0 0 1.5px var(--panel),0 3px 8px color-mix(in srgb,var(--b) 35%,transparent);
-}
-body.wtcc-floor .markdown-rendered h3::before,
-body.wtcc-floor .HyperMD-header-3::before{
-  content:"";display:inline-block;width:.42em;height:.42em;margin-right:.55em;border-radius:50%;vertical-align:.1em;
-  background:linear-gradient(135deg,var(--a),var(--b));
-}
-body.wtcc-floor .markdown-rendered h4::before,
-body.wtcc-floor .HyperMD-header-4::before{
-  content:"";display:inline-block;width:14px;height:2px;margin-right:.6em;background:var(--a);vertical-align:.3em;
+body .metadata-properties-title::before{content:"";width:8px;height:8px;background:var(--a);flex:none}
+body .metadata-properties-title::after{content:"/ 属性";font-weight:400;letter-spacing:.1em;color:var(--mute)}
+body .metadata-property{border-bottom:1px dotted var(--line)}
+body .metadata-property:last-child{border-bottom:0}
+body .metadata-property-key-input,
+body .metadata-property-key .metadata-property-key-input{
+  font:700 10px var(--wtcc-mono);letter-spacing:.14em;text-transform:uppercase;
 }
 
-/* Callout：玻璃 + 顶部粉线（白边 + 阴影沿用通用规则） */
-body.wtcc-floor .callout{
-  background:var(--glass);backdrop-filter:blur(8px);border-radius:2px 2px 10px 10px;
-  box-shadow:inset 0 2px 0 var(--a),var(--cshadow);
+/* ---------- 2 缝线边（Callout / 表格 / 代码块） ---------- */
+.callout{position:relative}
+.callout::after{
+  content:"";position:absolute;inset:5px;pointer-events:none;
+  border:1.5px dashed var(--a);opacity:.55;border-radius:8px;
 }
-body.wtcc-floor blockquote{border:1px solid var(--line);border-top:2px solid var(--a);border-radius:2px 2px 10px 10px;background:var(--glass)}
-body.wtcc-floor hr{border:0;height:1px;background:linear-gradient(90deg,var(--a),var(--b),transparent)}
-body.wtcc-floor .status-bar{color:var(--text-normal)}
+.markdown-rendered table,
+.markdown-source-view.mod-cm6 .cm-embed-block table{
+  outline:1.5px dashed color-mix(in srgb,var(--a) 55%,transparent);outline-offset:7px;margin:12px 8px;
+}
+.markdown-rendered pre{position:relative}
+.markdown-rendered pre::after{
+  content:"";position:absolute;inset:6px 6px 6px 9px;pointer-events:none;
+  border:1.5px dashed rgba(255,255,255,.22);border-radius:3px;
+}
+/* 实时预览代码块：每行各画左右缝线，首尾行补上下缝线 */
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-codeblock{
+  --st:rgba(255,255,255,.22);
+  background-image:
+    repeating-linear-gradient(180deg,var(--st) 0 4px,transparent 4px 8px),
+    repeating-linear-gradient(180deg,var(--st) 0 4px,transparent 4px 8px);
+  background-size:1.5px 100%,1.5px 100%;
+  background-position:9px 0,calc(100% - 6px) 0;
+  background-repeat:no-repeat;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-codeblock-begin{
+  background-image:
+    repeating-linear-gradient(180deg,var(--st) 0 4px,transparent 4px 8px),
+    repeating-linear-gradient(180deg,var(--st) 0 4px,transparent 4px 8px),
+    repeating-linear-gradient(90deg,var(--st) 0 4px,transparent 4px 8px);
+  background-size:1.5px 100%,1.5px 100%,calc(100% - 15px) 1.5px;
+  background-position:9px 0,calc(100% - 6px) 0,9px 6px;
+}
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-codeblock-end{
+  background-image:
+    repeating-linear-gradient(180deg,var(--st) 0 4px,transparent 4px 8px),
+    repeating-linear-gradient(180deg,var(--st) 0 4px,transparent 4px 8px),
+    repeating-linear-gradient(90deg,var(--st) 0 4px,transparent 4px 8px);
+  background-size:1.5px 100%,1.5px 100%,calc(100% - 15px) 1.5px;
+  background-position:9px 0,calc(100% - 6px) 0,9px calc(100% - 6px);
+}
 
-/* ==========================================================================
-   B3 · 机器人伙伴
-   ========================================================================== */
-body.wtcc-bot{
-  --bot-face:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 15'><rect x='1' y='1' width='20' height='13' rx='5' fill='%232a2238' stroke='%238e7bb5' stroke-width='1.5'/><circle cx='7' cy='7.5' r='2' fill='%23c9a3ff'/><circle cx='15' cy='7.5' r='2' fill='%23c9a3ff'/></svg>");
-  --tag-radius:7px;
-  --tag-color:#d9b8ff;--tag-color-hover:#fff;
-  --tag-background:#1c1826;--tag-background-hover:#2a2238;
-  --tag-border-color:#3b3050;--tag-border-color-hover:#b388ff;
-  --checkbox-radius:50%;--checkbox-color:#2a2238;--checkbox-marker-color:#c9a3ff;
-  --blockquote-border-thickness:0px;
+/* ---------- 3 Callout 分面料 ----------
+   镭射外套（默认）：note / info / abstract / todo / quote …
+   警示带：warning / caution / attention / question / help / faq
+   网眼：tip / hint / important / success / check / done / example
+   粗边：danger / error / failure / fail / missing / bug */
+.callout-title{color:var(--a)}
+.callout:is([data-callout="warning"],[data-callout="caution"],[data-callout="attention"],[data-callout="question"],[data-callout="help"],[data-callout="faq"]){
+  border-radius:6px;padding-left:32px;background:linear-gradient(var(--glass),var(--glass));
 }
-.theme-dark.wtcc-bot{--tag-background:#0b0810}
-body.wtcc-bot a.tag,body.wtcc-bot .cm-hashtag{text-shadow:0 0 8px #b388ff}
-/* 侧栏：激活项带机器人脸 */
-body.wtcc-bot .nav-file-title.is-active,
-body.wtcc-bot .tree-item-self.is-active{background:var(--ink);color:var(--onink);border-radius:8px;position:relative;padding-left:34px}
-body.wtcc-bot .nav-file-title.is-active::before,
-body.wtcc-bot .tree-item-self.is-active::before{
-  content:"";position:absolute;left:9px;top:50%;width:18px;height:12px;margin-top:-6px;
-  background:var(--bot-face) center/contain no-repeat;
+.callout:is([data-callout="warning"],[data-callout="caution"],[data-callout="attention"],[data-callout="question"],[data-callout="help"],[data-callout="faq"])::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:14px;pointer-events:none;
+  background:repeating-linear-gradient(-45deg,var(--a) 0 5px,var(--ink) 5px 10px);
+}
+.callout:is([data-callout="warning"],[data-callout="caution"],[data-callout="attention"],[data-callout="question"],[data-callout="help"],[data-callout="faq"]) .callout-title{color:var(--ink)}
+
+.callout:is([data-callout="tip"],[data-callout="hint"],[data-callout="important"],[data-callout="success"],[data-callout="check"],[data-callout="done"],[data-callout="example"]){
+  border-radius:12px 12px 12px 2px;
+  background:radial-gradient(circle,color-mix(in srgb,var(--b) 40%,transparent) 1.1px,transparent 1.6px) 0 0/9px 9px,var(--glass);
+}
+.callout:is([data-callout="tip"],[data-callout="hint"],[data-callout="important"],[data-callout="success"],[data-callout="check"],[data-callout="done"],[data-callout="example"]) .callout-title{color:var(--b)}
+
+.callout:is([data-callout="danger"],[data-callout="error"],[data-callout="failure"],[data-callout="fail"],[data-callout="missing"],[data-callout="bug"]){
+  border:2px solid var(--a);border-radius:4px;
+  background:color-mix(in srgb,var(--a) 12%,var(--panel));
+}
+.callout:is([data-callout="danger"],[data-callout="error"],[data-callout="failure"],[data-callout="fail"],[data-callout="missing"],[data-callout="bug"]) .callout-title{color:var(--a-text)}
+
+/* ---------- 4 织带滚动条（桌面端） ---------- */
+body:not(.is-mobile) .markdown-source-view.mod-cm6 .cm-scroller::-webkit-scrollbar,
+body:not(.is-mobile) .markdown-preview-view::-webkit-scrollbar{width:16px}
+body:not(.is-mobile) .markdown-source-view.mod-cm6 .cm-scroller::-webkit-scrollbar-track,
+body:not(.is-mobile) .markdown-preview-view::-webkit-scrollbar-track{
+  background-color:transparent;
+  background-image:repeating-linear-gradient(180deg,var(--mute) 0 5px,transparent 5px 9px);
+  background-size:2px 100%;background-position:center;background-repeat:no-repeat;
+}
+body:not(.is-mobile) .markdown-source-view.mod-cm6 .cm-scroller::-webkit-scrollbar-thumb,
+body:not(.is-mobile) .markdown-preview-view::-webkit-scrollbar-thumb{
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.75) 0 2px,transparent 2px 5px),var(--a);
+  background-clip:padding-box;
+  border:3px solid var(--background-primary);border-radius:6px;
+  box-shadow:inset 0 0 0 1.5px var(--ink);
 }
 
-/* 标题：大机器人脸 + 虚点线 / 小机器人脸 / LED 双点 / 提示符 */
-body.wtcc-bot .markdown-rendered h1,
-body.wtcc-bot .HyperMD-header-1{padding-bottom:.22em;border-bottom:2px dotted var(--b)}
-body.wtcc-bot .markdown-rendered h1::before,
-body.wtcc-bot .HyperMD-header-1::before{
-  content:"";display:inline-block;width:32px;height:22px;margin-right:.45em;vertical-align:-.1em;
-  background:var(--bot-face) center/contain no-repeat;
+/* ---------- 5 反光条 ---------- */
+/* 激活文件、左侧织带、活动标签顶线发光 */
+.workspace-split.mod-left-split::before{box-shadow:0 0 10px var(--a)}
+.workspace-split.mod-root .workspace-tab-header-inner{position:relative}
+.workspace-split.mod-root .workspace-tab-header.is-active .workspace-tab-header-inner::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:3px;pointer-events:none;
+  box-shadow:0 0 10px var(--a),0 0 2px #fff;
 }
-body.wtcc-bot .markdown-rendered h2::before,
-body.wtcc-bot .HyperMD-header-2::before{
-  content:"";display:inline-block;width:22px;height:15px;margin-right:.5em;vertical-align:-1px;
-  background:var(--bot-face) center/contain no-repeat;
+/* 编辑区右侧竖向反光条（在滚动条左侧） */
+body:not(.is-mobile) .workspace-leaf-content[data-type="markdown"] > .view-content{position:relative}
+body:not(.is-mobile) .workspace-leaf-content[data-type="markdown"] > .view-content::after{
+  content:"";position:absolute;right:16px;top:0;bottom:0;width:5px;z-index:3;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(-45deg,var(--refl1) 0 3px,color-mix(in srgb,var(--a) 50%,transparent) 3px 6px);
 }
-body.wtcc-bot .markdown-rendered h3::before,
-body.wtcc-bot .HyperMD-header-3::before{
-  content:"";display:inline-block;width:15px;height:8px;margin-right:.55em;vertical-align:.05em;
-  background:
-    radial-gradient(circle 3px at 3.5px 50%,#b388ff 98%,transparent),
-    radial-gradient(circle 3px at 11.5px 50%,#b388ff 98%,transparent);
-  filter:drop-shadow(0 0 3px #b388ff);
+/* 标题：淡淡的光晕 + 粉色扣块上的流光 */
+.markdown-rendered h1,.HyperMD-header-1{position:relative;text-shadow:0 3px 10px color-mix(in srgb,var(--a) 28%,transparent)}
+.markdown-rendered h1::after,.HyperMD-header-1::after{
+  content:"";position:absolute;left:0;bottom:0;width:56px;height:4px;pointer-events:none;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.95) 50%,transparent 70%) 0 0/220% 100%;
+  animation:wtcc-sheen 2.6s linear infinite;
 }
-body.wtcc-bot .markdown-rendered h4,body.wtcc-bot .HyperMD-header-4{color:var(--b)}
-body.wtcc-bot .markdown-rendered h4::before,
-body.wtcc-bot .HyperMD-header-4::before{content:">_";margin-right:.6em;letter-spacing:0;color:var(--a)}
+@keyframes wtcc-sheen{from{background-position:120% 0}to{background-position:-120% 0}}
+@media (prefers-reduced-motion:reduce){
+  .markdown-rendered h1::after,.HyperMD-header-1::after{animation:none}
+}
+/* 深色：Callout 外发光 */
+.theme-dark .callout{box-shadow:var(--cshadow),0 0 22px color-mix(in srgb,var(--b) 35%,transparent)}
 
-/* Callout：白边 + 阴影 + 机器人脸图标 + 硬阴影 */
-body.wtcc-bot .callout{
-  background:var(--panel);border-radius:14px;
-  box-shadow:4px 4px 0 var(--a),var(--cshadow);
+/* ---------- 6 缝线链接 ---------- */
+.markdown-rendered a.internal-link,
+.markdown-rendered a.external-link,
+.markdown-source-view.mod-cm6 .cm-hmd-internal-link .cm-underline,
+.markdown-source-view.mod-cm6 .cm-link .cm-underline,
+.markdown-source-view.mod-cm6 .cm-hmd-internal-link,
+.markdown-source-view.mod-cm6 .cm-link{
+  text-decoration-line:underline;text-decoration-style:dashed;text-decoration-thickness:2px;
+  text-decoration-color:var(--a);text-underline-offset:3px;
 }
-body.wtcc-bot .callout-icon{width:22px;height:15px;background:var(--bot-face) center/contain no-repeat}
-body.wtcc-bot .callout-icon svg{display:none}
-body.wtcc-bot blockquote{border:1.5px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--a);padding:.4em 1em}
-body.wtcc-bot hr{border:0;height:0;border-top:2px dotted var(--b)}
-/* 复选框：选中后是一对眼睛 */
-body.wtcc-bot input[type="checkbox"]:checked::after{
-  -webkit-mask-image:none;mask-image:none;
-  background:
-    radial-gradient(circle 1.6px at 32% 50%,#c9a3ff 98%,transparent),
-    radial-gradient(circle 1.6px at 68% 50%,#c9a3ff 98%,transparent);
+.markdown-rendered a.internal-link:hover,
+.markdown-rendered a.external-link:hover,
+.markdown-source-view.mod-cm6 .cm-hmd-internal-link:hover,
+.markdown-source-view.mod-cm6 .cm-link:hover{
+  background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--a) 30%,transparent) 0 6px,transparent 6px 9px);
 }
-/* 悬浮的小机器人 */
-body.wtcc-bot .workspace-split.mod-root{position:relative}
-body.wtcc-bot .workspace-split.mod-root::after{
-  content:"";position:absolute;right:36px;top:64px;width:50px;height:40px;pointer-events:none;z-index:5;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'><g fill='white' stroke='%23d9d3e6' stroke-width='1.5'><ellipse cx='4' cy='9' rx='5' ry='5'/><ellipse cx='46' cy='9' rx='5' ry='5'/><rect x='6' y='4' width='38' height='32' rx='14'/></g><rect x='12' y='12' width='26' height='14' rx='7' fill='%232a2238'/><circle cx='21' cy='19' r='2.6' fill='%23b388ff'/><circle cx='29' cy='19' r='2.6' fill='%23b388ff'/></svg>") center/contain no-repeat;
-  filter:drop-shadow(0 6px 10px rgba(165,111,240,.35));
-  animation:wtcc-float 3.6s ease-in-out infinite;
+
+/* ---------- 7 斜纹选区 + 粗块光标 ---------- */
+.markdown-source-view.mod-cm6 .cm-editor .cm-selectionBackground,
+.markdown-source-view.mod-cm6 .cm-editor.cm-focused .cm-selectionBackground,
+.markdown-source-view.mod-cm6 .cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground{
+  background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--a) 38%,transparent) 0 4px,color-mix(in srgb,var(--a) 14%,transparent) 4px 8px) !important;
 }
-@keyframes wtcc-float{50%{transform:translateY(-6px)}}
-@media (prefers-reduced-motion:reduce){body.wtcc-bot .workspace-split.mod-root::after{animation:none}}
+.markdown-source-view.mod-cm6 .cm-cursor,
+.markdown-source-view.mod-cm6 .cm-dropCursor{
+  border-left:7px solid color-mix(in srgb,var(--a) 70%,transparent) !important;
+}
+body{caret-color:var(--a)}
